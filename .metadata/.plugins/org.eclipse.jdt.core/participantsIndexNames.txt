@@ -3,6 +3,8 @@ C:\bootDev\bootStudy\.metadata\.plugins\org.eclipse.jst.jsp.core\jspsearch\21248
 \SpringBootJspProject\src\main\java
 C:\bootDev\bootStudy\.metadata\.plugins\org.eclipse.jst.jsp.core\jspsearch\144337665.index
 \SecondProject\src\main\java
+C:\bootDev\bootStudy\.metadata\.plugins\org.eclipse.jst.jsp.core\jspsearch\78480656.index
+\SpringBootJspProject_2\src\main\java
 C:\bootDev\bootStudy\.metadata\.plugins\org.eclipse.jst.jsp.core\jspsearch\3993752608.index
 \firstProject\src\main\java
 C:\bootDev\bootStudy\.metadata\.plugins\org.eclipse.jst.jsp.core\jspsearch\3364082687.index
