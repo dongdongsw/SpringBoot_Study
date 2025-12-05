@@ -19,6 +19,10 @@ p{
    white-space: nowrap;
    text-overflow: ellipsis;
 }
+
+.a-link{
+	cursor: pointer;
+}
 </style>
 <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
@@ -37,6 +41,13 @@ p{
 		    </div>
 		  </div>
     </div>
+    <div class="row text-center" style="margin-top: 10px;">
+			<ul class="pagination">
+				<li v-if="startPage>1"><a class="a-link" @click="prev(startPage-1)">&lt;</a></li>
+				<li v-for="i in range(startPage, endPage)" :class="curpage==i?'active':'' "><a class="a-link" @click="pageChange(i)">{{i}}</a></li>
+				<li v-if="endPage < totalpage"><a class="a-link" @click="next(endPage+1)">&gt;</a></li>
+			</ul>
+		</div>
   </div>
   <script>
     let musicApp=Vue.createApp({
@@ -65,6 +76,27 @@ p{
     				this.startPage=response.data.startPage
     				this.endPage=response.data.endPage
     			})
+    		},
+    		range(start, end){
+    			let arr=[]
+    			let len = end-start
+    			for(let i=0; i<=len; i++){
+    				arr[i] = start
+    				start++
+    			}
+    			return arr
+    		},
+    		prev(page){
+    			this.curpage=page
+    			this.dataRecv()
+    		},
+    		pageChange(page){
+    			this.curpage=page
+    			this.dataRecv()
+    		},
+    		next(page){
+    			this.curpage=page
+    			this.dataRecv()
     		}
     	}
     }).mount(".container")
