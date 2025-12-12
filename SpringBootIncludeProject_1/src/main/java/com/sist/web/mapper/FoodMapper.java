@@ -1,6 +1,7 @@
 package com.sist.web.mapper;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
@@ -33,4 +34,27 @@ public interface FoodMapper {
 			+ "FROM menupan_food "
 			+ "WHERE fno = #{fno}")
 	public FoodVO foodDetailData(int fno);
+	
+	/*
+	 <select id="foodFindData" resultType="com.sist.web.vo.FoodVO" parameterType="hashmap">
+ 		SELECT fno, name, poster, address 
+ 		FROM menupan_food
+ 		<if test="column!=all" >
+ 			WHERE ${column} LIKE '%'||#{ss}||'%'
+ 		</if>
+ 		ORDER BY fno ASC
+ 		OFFSET #{start} RWOS FETCH NEXT 12 ROWS ONLY
+ 	</select>
+ 	
+ 	<select id="foodFindTotalPage" resultType="int" parameterType="hashmap">
+ 		SELECT CEIL(COUNT(*)/12.0) 
+ 		FROM menupan_food
+ 		<if test="column!=all" >
+ 			WHERE ${column} LIKE '%'||#{ss}||'%'
+ 		</if>
+ 	</select>
+	 */
+	public List<FoodVO> foodFindData(Map map);
+	
+	public int foodFindTotalPage(Map map);
 }

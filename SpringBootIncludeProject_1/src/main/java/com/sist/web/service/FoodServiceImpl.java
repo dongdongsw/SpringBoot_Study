@@ -1,6 +1,7 @@
 package com.sist.web.service;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -46,6 +47,18 @@ public class FoodServiceImpl implements FoodService{
 		mapper.hitIncrement(fno);
 		
 		return mapper.foodDetailData(fno);
+	}
+
+	@Override
+	public List<FoodVO> foodFindData(Map map) {
+		// TODO Auto-generated method stub
+		return mapper.foodFindData(map);
+	}
+
+	@Override
+	public int foodFindTotalPage(Map map) {
+		// TODO Auto-generated method stub
+		return mapper.foodFindTotalPage(map);
 	}
 	
 	

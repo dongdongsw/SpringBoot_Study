@@ -1,9 +1,8 @@
 package com.sist.web.service;
 
 import java.util.List;
+import java.util.Map;
 
-import org.apache.ibatis.annotations.Select;
-import org.apache.ibatis.annotations.Update;
 
 import com.sist.web.vo.FoodVO;
 
@@ -34,4 +33,9 @@ public interface FoodService {
 		public FoodVO foodDetailData(int fno);
 	 */
 	public FoodVO foodDetailData(int fno);
+	
+	// 검색
+	public List<FoodVO> foodFindData(Map map);
+	
+	public int foodFindTotalPage(Map map);
 }
