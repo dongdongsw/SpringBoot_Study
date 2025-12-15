@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.sist.web.service.BoardService;
 import com.sist.web.vo.BoardVO;
@@ -91,5 +92,70 @@ public class BoardController {
 		bService.boardInsert(vo);
 		
 		return "redirect:/board/list";
+	}
+	
+	@GetMapping("/board/update")
+	public String board_update(@RequestParam("no") int no, Model model) {
+		
+		BoardVO vo = bService.boardUpdateData(no);
+		
+		model.addAttribute("vo",vo);
+		// 데이터베이스 연동
+		model.addAttribute("main_html", "board/update");
+		return "main/main";
+	}
+	
+	@PostMapping("/board/update_ok")
+	@ResponseBody
+	public String board_update_ok(@ModelAttribute("vo") BoardVO vo) {
+		
+		String res="";
+		// 데이터베이스 연결
+		boolean bCheck = bService.boardUpdate(vo);
+		if(bCheck == true) {
+			res = "<script>"
+					+ "location.href=\"/board/detail?no="+vo.getNo()+"\";"
+					+ "</script>";
+		}
+		else {
+			res = "<script>"
+					+ "alert(\"Password Fail!!\");"
+					+ "history.back();"
+					+ "</script>";
+		}
+		// 이동 = 1. 비밀번호가 틀린 경우 / 2. 비밀번호가 맞는 경우
+		
+		return res;
+	}
+	
+	@GetMapping("/board/delete")
+	public String board_delet(@RequestParam("no") int no, Model model) {
+		
+		model.addAttribute("no",no);
+		model.addAttribute("main_html", "board/delete");
+		return "main/main";
+	}
+	
+	@PostMapping("/board/delete_ok")
+	@ResponseBody
+	public String board_update_ok(@RequestParam("no") int no, @RequestParam("pwd") String pwd) {
+		
+		String res="";
+		// 데이터베이스 연결
+		boolean bCheck = bService.boardDelete(no, pwd);
+		if(bCheck == true) {
+			res = "<script>"
+					+ "location.href=\"/board/list\""
+					+ "</script>";
+		}
+		else {
+			res = "<script>"
+					+ "alert(\"Password Fail!!\");"
+					+ "history.back();"
+					+ "</script>";
+		}
+		// 이동 = 1. 비밀번호가 틀린 경우 / 2. 비밀번호가 맞는 경우
+		
+		return res;
 	}
 }

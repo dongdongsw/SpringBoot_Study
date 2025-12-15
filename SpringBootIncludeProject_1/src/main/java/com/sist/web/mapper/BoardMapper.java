@@ -3,6 +3,7 @@ package com.sist.web.mapper;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
@@ -41,12 +42,17 @@ public interface BoardMapper {
 	public void boardInsert(BoardVO vo);
 	
 	// 수정 @PutMapping
+	@Select("SELECT pwd FROM springboard WHERE no = #{no}")
+	public String boardGetPassword(int no);
+	
 	@Update("UPDATE springboard SET "
-			+ "name=#{name}, subject=#{subject}, content=#{content}")
-	public void boardUpdate(Map map);
+			+ "name=#{name}, subject=#{subject}, content=#{content} "
+			+ "WHERE no=#{no}")
+	public void boardUpdate(BoardVO vo);
 	// 삭제 @DeleteMapping
 	// -----------------------------------RestFul
-
+	@Delete("DELETE FROM springboard WHERE no=#{no}")
+	public void boardDelete(int no);
 	
 	
 }

@@ -1,6 +1,7 @@
 package com.sist.web.service;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Select;
@@ -43,4 +44,11 @@ public interface BoardService {
 	
 	 */
 	public void boardInsert(BoardVO vo);
+	
+	public BoardVO boardUpdateData(int no);
+	public boolean boardUpdate(BoardVO vo);
+	public boolean boardDelete(int no, String pwd);
+
+
+	
 }
