@@ -1,0 +1,73 @@
+package com.sist.web.aop;
+
+import java.util.List;
+
+import org.aspectj.lang.annotation.After;
+import org.aspectj.lang.annotation.Aspect;
+import org.springframework.stereotype.Component;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
+import org.springframework.web.servlet.mvc.condition.RequestConditionHolder;
+
+import com.sist.web.service.FoodService;
+import com.sist.web.vo.FoodVO;
+
+import jakarta.servlet.http.HttpServletRequest;
+import lombok.RequiredArgsConstructor;
+
+@Aspect //공통 모듈 => 모든 html에 공통으로 적용
+@Component //관리 => 스프링에서 처리
+@RequiredArgsConstructor
+/*
+ * 	AOP 적용 => JoinPoint / PointCut
+ * 							어떤 메소드인지
+ * 				메소드 어느 영역인지
+ * 
+ * 				public String aaa(){
+ * 					try{
+ * 						----------- @Around(first) => setAutoCommit
+ * 						
+ * 						----------- @Around(last) => commit
+ * 					}catch(Exception ex){
+ * 						@After-Throwing => rollback()
+ * 					}finally{
+ * 						@After
+ * 					}
+ * 					return "" @After-Returning
+ * 				}
+ * 				해당 메소드를 한번에 통합해서 => 호출
+ * 				---------------------- 위빙
+ * 
+ * 				@After @Before	@After-Throwing
+ * 				after()	before()	afterthrowing()
+ * 
+ * 				public void aaa(){
+ * 
+ * 					before()
+ * 					try{
+ * 						---
+ * 						---
+ * 						
+ * 					}catch(exception ex){
+ * 						afterthrowing()
+ * 	
+ * 					}finally{
+ * 						after()
+ * 					}
+ * 				}
+ * 
+ * 				대신 => 프록시 패턴 (대리자)
+ */
+public class FooterAOP {
+	// FoodController => fService 동일하다 (싱글톤으로 저장)
+	private final FoodService fService;
+	
+	@After("execution(* com.sist.web.controller.*Controller.*(..))")
+	public void after() {
+		HttpServletRequest request = 
+				((ServletRequestAttributes)RequestContextHolder.getRequestAttributes()).getRequest();
+		
+		List<FoodVO> fList = fService.foodTop10Data();
+		request.setAttribute("fList", fList);
+	}
+}
