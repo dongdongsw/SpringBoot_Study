@@ -1,8 +1,11 @@
 package com.sist.web.controller;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.StringTokenizer;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,8 +18,15 @@ import com.sist.web.vo.RecipeDetailVO;
 import com.sist.web.vo.RecipeVO;
 import com.sist.web.vo.SeoulVO;
 
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 
+/*
+	1. 전송 / 처리 / 결과값 출력
+	  	-------------------
+	  	| 요청값 		 | 결과값
+	  	------		  ------
+*/
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/recipe/")
@@ -60,9 +70,28 @@ public class RecipeController {
 	}
 
 	@GetMapping("detail")
-	public String recipe_detail(@RequestParam("no") int no, Model model) {
+	public String recipe_detail(@RequestParam("no") int no, Model model, HttpSession session) {
 		
 		RecipeDetailVO vo = rService.recipeDetailData(no);
+		List<String> mList = new ArrayList<String>();
+		List<String> nList = new ArrayList<String>();
+		String[] datas = vo.getFoodmake().split("\n");
+		for(String s : datas) {
+			StringTokenizer st = new StringTokenizer(s,"^");
+			mList.add(st.nextToken());
+			nList.add(st.nextToken());
+			
+		}
+		String id = (String)session.getAttribute("id");
+		if(id==null) {
+			model.addAttribute("sessionId","");
+		}
+		else {
+			model.addAttribute("sessionId",id);
+		}
+		
+		model.addAttribute("mList", mList);
+		model.addAttribute("nList", nList);
 		
 		model.addAttribute("vo", vo);
 		

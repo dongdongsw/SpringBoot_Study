@@ -1,0 +1,22 @@
+package com.sist.web.vo;
+
+import java.util.Date;
+
+import lombok.Data;
+
+/*
+ NO      NOT NULL NUMBER         
+CNO              NUMBER         
+TYPE             NUMBER         
+ID               VARCHAR2(20)   
+NAME    NOT NULL VARCHAR2(51)   
+MSG     NOT NULL VARCHAR2(4000) 
+REGDATE          DATE 
+ */
+@Data
+public class CommentVO {
+
+	private int no , cno, type;
+	private String id, name, msg, dbday;
+	private Date regdate;
+}

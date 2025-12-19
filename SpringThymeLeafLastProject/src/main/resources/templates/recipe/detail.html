@@ -3,136 +3,224 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
-
 </head>
 <body>
-	<div id="main-wrapper">
-		<div class="container">
-			<div class="row aln-center">
-				<table class="table">
-					<tbody>
-						<tr>
-							<td width="30%" class="text-center" rowspan="9">
-								<!-- <img th:src="${vo.poster}" style="width:330px;height: 330px;"> -->
-							</td>
-							<td colspan="2">
-								<h3>[[${vo.title}]]</h3>
-							</td>
-						</tr>
-						<!-- <tr>
-							<td class="text-center" style="color:gray" width="10%">주소</td>
-							<td width="60%">[[${vo.address}]]
-								
-							</td>
-						</tr>
-						<tr>
-							<td class="text-center" style="color:gray" width="10%">전화</td>
-							<td width="60%">[[${vo.phone}]]</td>
-						</tr>
-						<tr>
-							<td class="text-center" style="color:gray" width="10%">음식 종류</td>
-							<td width="60%">[[${vo.type}]]</td>
-						</tr>
-						<tr>
-							<td class="text-center" style="color:gray" width="10%">가격대</td>
-							<td width="60%">[[${vo.price}]]</td>
-						</tr>
-						<tr>
-							<td class="text-center" style="color:gray" width="10%">영업 시간</td>
-							<td width="60%">[[${vo.time}]]</td>
-						</tr>
-						<tr>
-							<td class="text-center" style="color:gray" width="10%">주차</td>
-							<td width="60%">[[${vo.parking}]]</td>
-						</tr>
-						<tr>
-							<td class="text-center" style="color:gray" width="10%">테마</td>
-							<td width="60%">[[${vo.theme}]]</td>
-						</tr>
-						<tr>
-							<th width="10%" class="text-center" style="color:gray">좋아요</th>
-							<td width="60%" class="text-left">
-								<img alt="" src="/images/likeoff.png" style="width: 20px; height: 20px; display: inline-block;">
-									([[${vo.hit}]])
-							</td>
-						</tr> -->
-					</tbody>
-				</table>
-				<table class="table">
-					<tr>
-						<td>[[${vo.content}]]</td>
-					</tr>
-					<tr>
-						<td class="text-right">
-							<a href="#" class="btn btn-sm btn-primary">찜하기</a>
-							<a href="#" class="btn btn-sm btn-info">예약하기</a>
-							<a href="/food/list" class="btn btn-sm btn-warning">목록</a>
-						</td>
-					</tr>
-					
-				</table>
-			</div>
-			<div class="row aln-text" style="margin-top: 0px;" >
-				<table th:if="${session.id  != null}">
+   <div id="main-wrapper">
+      <div class="container">
+         <div class="row">
+            <table class="table">
+               <tr>
+                  <td class="text-center" colspan="3">
+                     <img th:src="${vo.poster}" style="width: 960px; height: 450px;">
+                  </td>
+               </tr>
+               <tr>
+                  <td colspan="3" class="text-left">[[${vo.title}]]</td>
+               </tr>
+               <tr>
+                  <td colspan="3">[[${vo.content}]]</td>
+               </tr>
+               <tr>
+                  <td class="text-center"><img src="/images/a1.png"></td>
+                  <td class="text-center"><img src="/images/a2.png"></td>
+                  <td class="text-center"><img src="/images/a3.png"></td>
+               </tr>
+               <tr>
+                  <td class="text-center">[[${vo.info1}]]</td>
+                  <td class="text-center">[[${vo.info2}]]</td>
+                  <td class="text-center">[[${vo.info3}]]</td>
+               </tr>
+            </table>
+            <table class="table">
+               <tr>
+                  <td colspan="2"><b>[조리순서]</b></td>
+               </tr>
+               <tr th:each="data,status:${mList}">
+                  <td class="text-left" width="80%">[[${data}]]</td>
+                  <td class="text-right" width="20%">
+                     <img th:src="${nList[status.index]}" style="width:150px; height: 100px" class="img-rounded">
+                  </td>
+                  <!-- 
+                     status
+                     status.index => ArrayList의 index
+                     status.count => ArrayList의 총 갯수
+                     status.last => ArrayList의 저장된 마지막 값
+                     status.first => 첫번째 값
+                     status.even => 짝수
+                     status.odd => 홀수
+                     
+                     => StringTokenize
+                     => <c:forTokens>
+                     => ${#strings.split(문자열,'구분자')}
+                   -->
+               </tr>
+            </table>
+            <table class="table">
+            	<tr>
+            		<td width="20%" class="text-center" rowspan="2">
+            			<img alt="" th:src="${vo.chef_poster}" style="width:100px; height: 100px;" class="img-circle">
+            		</td>
+            		<td width="80%">[[${vo.chef}]]</td>
+            	</tr>
+            	<tr>
+            		<td width="80%">[[${vo.chef_profile}]]</td>
+            	</tr>
+            </table>
+            <table class="table">
+				<tr>
+					<td>
+						<table class="table" v-for="rvo in list">
+							<tr>
+								<td class="text-left" width="80%">
+									◑((rvo.name))&nbsp;((rvo.dbday))
+								</td>
+								<td class="text-right" width="20%">
+									<span v-if="sessionId === rvo.id">
+										<button type="button" class="btn btn-xs btn-warning upbtn" :id="'u'+rvo.no" @click="replyUpdateForm(rvo.no)">수정</button>
+										<button type="button" class="btn-xs btn-info" @click="replyDelete(rvo.no)">삭제</button>
+									</span>
+								</td>
+							</tr>
+							<tr>
+								<td colspan="2" class="text-left">
+									<pre style="white-space: pre-wrap; background: white; border: none;">((rvo.msg))</pre>
+								</td>
+							</tr>
+							<tr>
+								<td colspan="2">
+									<table class="table ups" style="display: none;" :id="'up'+rvo.no">
+										<tr>
+											<td>
+												<textarea rows="4" cols="140" style="float: left;" :id="'umsg'+rvo.no">((rvo.msg))</textarea>
+												<button type="button" class="btn-primary" style="margin-left:8px; width: 105px; height: 100px; float: left;"  @click="replyUpdate(rvo.no)">댓글 수정</button>
+											</td>
+										</tr>
+									</table>
+								</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+			</table>
+				<table class="table"  th:if="${session.id!=null}">
 					<tr>
 						<td>
-							<textarea rows="3" cols="141" style="float: left;"></textarea>
-							<button type="button" class="btn-primary" style="margin-left:8px; width: 120px; height: 100px; float: left;">댓글 쓰기</button>
+							<textarea rows="3" cols="141" style="float: left;" v-model="msg" ref="msg"></textarea>
+							<button type="button" class="btn-primary" style="margin-left:8px; width: 120px; height: 100px; float: left;" @click="insert()">댓글 쓰기</button>
 						</td>
 					</tr>
 				</table>
-			</div>
-		</div>
-	</div>
-	<script>
+         </div>
+      </div>
+   </div>
+   <script>
 		const commentApp = Vue.createApp({
 			data(){
 				return{
-					// 멤버 변수
+					
+					list:[],
+					cno:'[[${vo.no}]]',
+					sessionId:'[[${sessionId}]]',
+					msg:'',
+					type:2,
+					up:false
+				
 				}
 			},
-			////// VM => 변수를 변경하는 곳
-			/*
-				callback : Vue의 생명
-				= created() : 설정 => Vue 객체 생성 완료
-				= mounted() : 브라우저에서 HTML을 번역후 출력 완료
-				= updated() : 멤버변수가 변경된 경우
-				= unmounted() : 화면 변경 => Vue객체가 소멸
-				
-				사용자 요청 === VM작업 === 결과 값 : Model === View(HTML)
-				
-				가상돔 => 일부만 관리
-				---- 임시 메모리에 저장 ====== 실제 돔 (브라우저에서 읽어서 출력)
-							|				 |
-							저장 ---------------
-									비교해서 다른 부분만 변경 => diff
-				=> 시리얼 라이즈 : Buffered
-			*/
+			
 			mounted(){
-				// 자동 호출 : window.onload => 연동 / 서버 연결
-				// jquery / react
-				/*
-					$function(){
-						$('#a').click(function(){})
-					})
-					
-					=> 
-					useEffect(()=>{
-						axios.get()	
-					},[curpage])
-				}
-				*/
+				
+				axios.get('http://localhost/comment/list_vue/',{
+					params:{
+						cno:this.cno,
+						type:this.type
+					}
+				}).then(response=>{
+					console.log(response.data)
+					this.list = response.data.list
+					this.cno = response.data.cno
+					this.type = response.data.type
+				})
 			},
 			methods:{
 				
+				insert(){
+					if(this.msg === ""){
+						this.$refs.msg.focus()
+						return
+					}
+					axios.post('http://localhost/comment/insert_vue/',{
+						cno:this.cno,
+						type:this.type,
+						msg:this.msg
+					}).then(response=>{
+						console.log(response.data)
+						this.list = response.data.list
+						this.cno = response.data.cno
+						this.type = response.data.type
+					})
+					this.msg=""
+					this.$refs.msg.focus()
+				},
+				replyDelete(no){
+					axios.get('http://localhost/comment/delete_vue/',{
+						params:{
+							no:no,
+							cno:this.cno,
+							type:this.type
+						}
+					}).then(response=>{
+						console.log(response.data)
+						this.list = response.data.list
+						this.cno = response.data.cno
+						this.type = response.data.type
+					})
+				},
+				replyUpdateForm(no){
+					$('.ups').hide()
+					$('.upbtn').text("수정")
+					if(this.up === false){
+						this.up = true
+						$('#up'+no).show()
+						$('#u'+no).text("취소")
+					}
+					else{
+						this.up = false
+						$('#up'+no).hide()
+						$('#u'+no).text("수정")
+					}
+						
+				},
+				replyUpdate(no){
+					let msg = $('#umsg'+no).val()
+					if(msg == ""){
+						$('#umsg'+no).focus()
+						return
+					}
+					axios.get('http://localhost/comment/update_vue/',{
+						params:{
+							no:no,
+							cno:this.cno,
+							type:this.type,
+							msg:msg
+						}
+					}).then(response=>{
+						console.log(response.data)
+						this.list = response.data.list
+						this.cno = response.data.cno
+						this.type = response.data.type
+						$('#up'+no).hide()
+						$('#u'+no).text("수정")
+					})
+				}
 			},
 			computed:{
-				// 시간 , 가격 , 총금액 => Format
+				
 			},
 			components:{
-				// 여러개의 기능을 처리 => include
+			
 			}
-			// HTML 출력하는 영역 => <template> => View => MVVM
+			
 		})
 		commentApp.config.compilerOptions.delimiters=['((','))']
 		commentApp.mount("#main-wrapper")

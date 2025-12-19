@@ -38,10 +38,12 @@ public interface RecipeMapper {
 	public RecipeDetailVO recipeDetailData(int no);
 	
 	@Select("SELECT no, title, hit, chef, rownum "
-			+ "FROM (SELECT no, title, hit, chef "
-			+ "FROM recipe "
-			+ "ORDER BY hit DESC) "
-			+ "WHERE rownum <= 10")
+			+ "FROM (SELECT no, title, hit, chef, "
+			+ "ROW_NUMBER() OVER (PARTITION BY chef ORDER BY hit DESC) as rn "
+			+ "FROM recipe)"
+			+ "WHERE rn = 1 "
+			+ "ORDER BY hit DESC "
+			+ "FETCH FIRST 10 ROWS ONLY")
 	public List<RecipeVO> recipeTop10();
 	
 	@Select("SELECT no, poster, title, chef "
@@ -54,4 +56,6 @@ public interface RecipeMapper {
 	@Select("SELECT CEIL(COUNT(*)/12.0) FROM recipe "
 			+ "WHERE REGEXP_LIKE(chef, #{chef})")
 	public int recipeChefTotalPage(String chef);
+	
+	
 }
