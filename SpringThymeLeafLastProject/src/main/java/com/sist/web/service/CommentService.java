@@ -1,0 +1,14 @@
+package com.sist.web.service;
+
+import java.util.List;
+
+
+import com.sist.web.vo.CommentVO;
+
+public interface CommentService {
+
+	public List<CommentVO> commentListData(int cno, int type);
+	public void commentDelete(int no);
+	public void commentInsert(CommentVO vo);
+	public void commentUpdate(int no, String msg);
+}
