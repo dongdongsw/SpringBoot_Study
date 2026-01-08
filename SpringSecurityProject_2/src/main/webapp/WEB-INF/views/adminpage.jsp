@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
+<%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -19,8 +21,9 @@
 <body>
 	<div class="container">
 		<div class="row">
-		<h3 class="text-center">관리자 페이지</h3>
-		<p>ADMIN 게정이 있는자만 접근이 가능</p>
+			<p>아이디: <sec:authentication property="name"/> </p>
+			<p>권한: <sec:authentication property="principal.authorities"/> </p>
+			<a href="/">메인화면</a>
 		</div>
 	</div>
 </body>

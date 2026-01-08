@@ -4,8 +4,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+<title>Insert title here</title><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
 <style type="text/css">
 	.container{
 		margin-top: 50px;
@@ -19,8 +18,10 @@
 <body>
 	<div class="container">
 		<div class="row">
-		<h3 class="text-center">관리자 페이지</h3>
-		<p>ADMIN 게정이 있는자만 접근이 가능</p>
+			<h3 class="text-center">모든 접속자 사용 가능</h3>
+			<p class="text-center">
+				<a href="/" class="btn btn-sm btn-danger">메인으로</a>
+			</p>
 		</div>
 	</div>
 </body>

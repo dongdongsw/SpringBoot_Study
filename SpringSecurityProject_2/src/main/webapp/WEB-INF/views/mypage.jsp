@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
+<%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -19,8 +21,14 @@
 <body>
 	<div class="container">
 		<div class="row">
-		<h3 class="text-center">관리자 페이지</h3>
-		<p>ADMIN 게정이 있는자만 접근이 가능</p>
+			<p>아이디:${id }</p>
+			<p>권한:</p>
+			<ul>
+				<c:forEach var="role" items="${roles }">
+					<li>${role.authority }</li>
+				</c:forEach>
+			</ul>
+			<a href="/">메인화면</a>
 		</div>
 	</div>
 </body>
