@@ -21,6 +21,19 @@
 	<div class="container">
 		<div class="row">
 			<h3 class="text-center">로그인</h3>
+			<c:if test="${param.error!=null }">
+				<table class="table">
+					<tbody>
+						<tr>
+							<td class="text-center">
+								<span style="color:red;">
+									아이디나 비밀번호가 틀림
+								</span>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</c:if>
 			<form action="/login" method="post">
 				<table class="table">
 					<tbody>
