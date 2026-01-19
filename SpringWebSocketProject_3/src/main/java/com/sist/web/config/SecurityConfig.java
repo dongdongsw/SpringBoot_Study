@@ -4,11 +4,15 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
+import com.sist.web.security.LoginFailHandler;
+import com.sist.web.security.LoginSuccessHandler;
 import com.sist.web.service.CustomerUserDetailService;
 
 import lombok.RequiredArgsConstructor;
@@ -18,6 +22,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class SecurityConfig {
 
+	private final LoginSuccessHandler loginSuccessHandler;
 	private final CustomerUserDetailService userDetailService;
 	
 	/*
@@ -38,24 +43,34 @@ public class SecurityConfig {
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
 		// 권한 제시
 		http
+			// 필수 => WebSocket 사용
 			.csrf(csrf-> csrf.disable())
+			// 접근 권한
 			.authorizeHttpRequests(auth -> auth
-					.requestMatchers("/","/login","join").permitAll()
-					.requestMatchers("/user", "/chat/**").authenticated()
-					.requestMatchers("/").hasAnyRole("ADMIN")
+					.requestMatchers("/","/login","join","/chat-ws/**").permitAll()
+					.requestMatchers("/user").authenticated()
+					.requestMatchers("/admin").hasAnyRole("ADMIN")
 					.anyRequest().permitAll()
 			)
-				
-		// 로그인
+			// 세션 기반 로그인 처리 => state(저장 상태) : cookie (JWT)
+			.sessionManagement(session -> session
+					.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
+			)
+			// => SNS 로그인
+			// 로그인
 			.formLogin(form -> form
-					.loginPage("/login")
-					.loginProcessingUrl("/login_process")
+					.loginPage("/login") // 사용자 정의
+					.loginProcessingUrl("/login_process") // 자체 로그인 처리
 					.defaultSuccessUrl("/",true)
 					.failureHandler(loginFailHandler())
+					.successHandler(loginSuccessHandler)
+					// 로그인 성공시 처리 => 중복 로그인 제어
 			)
 		// 로그아웃
 		.logout(logout->logout
 			.logoutSuccessUrl("/")
+			.deleteCookies("remember-me") // 로그아웃 쿠키 삭제
+			
 		)
 		// 자동로그인
 		.rememberMe(remember -> remember
@@ -76,13 +91,13 @@ public class SecurityConfig {
 	}
 	
 	// 로그인 실패시 처리
-	
-	// 로그인 성공시 처리 ==> 자동으로 session에 등록
-								// stomp
-	
 	@Bean
 	public AuthenticationFailureHandler loginFailHandler() {
 		
 		return new  LoginFailHandler();
 	} 
+	
+	// 로그인 성공시 처리 ==> 자동으로 session에 등록
+								// stomp
+	
 }

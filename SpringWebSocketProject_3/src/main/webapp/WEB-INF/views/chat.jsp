@@ -13,10 +13,17 @@
 
 .row{
 	margin:0px auto;
-	width: 600px;
+	width: 900px;
 }
-.h3{
-	text-align: center;
+
+.chat-body{
+	height: 450px;
+	overflow-y: auto;
+}
+
+.my-msg{
+	text-align:right;
+	color: #336ab7;
 }
 </style>
 <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
@@ -26,86 +33,75 @@
 <script src="https://unpkg.com/vue-demi"></script>
 <script src="https://unpkg.com/pinia@2/dist/pinia.iife.prod.js"></script>
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-
+<script type="text/javascript">
+	const LOGIN_USER = '${sessionScope.userid}'
+</script>
 </head>
 <body>
-	<div class="container">
+	<div class="container" id="app">
 		<div class="row" id="chat">
-			<h3>1:1 채팅</h3>
-			<table class="table">
-				<tbody>
-					<tr>
-						<td> <!--  width="85%" class="text-left" -->
-							<input type="text" v-model="store.userId" ref="userId" placeholder="아이디" class="input-sm">
-							<button @click="store.connect()">접속</button>
-						</td>
-					</tr>
-					<tr>
-						<td>
-							<input type="text" v-model="store.receiver" ref="receiver" placeholder="상대방" class="input-sm">
-							
-						</td>
-					</tr>
-					<tr>
-						<td>
-							<input type="text" v-model="store.msg" ref="msg" placeholder="보낼 메시지" class="input-sm" size="50">
-						</td>
-					</tr>
-					<tr>
-						<td>
-							<button @click="store.send()">전송</button>
-						</td>
-					</tr>
-					<tr>
-						<td colspan="2">
-							<ul >
-								<li v-for="(m,i) in store.message" :key="i">
-									{{m.sender}}:{{m.message}}
-								</li>
-							</ul>
-						</td>
-					</tr>
-				</tbody>
-			</table>
-			
+			<h3 class="text-center">채팅</h3>
+			<div class="col-sm-3">
+				<div class="panel panel-primary">
+					<div class="panel-heading text-center">
+						<b>접속자 목록</b>
+					</div>
+					<ul class="list-group">
+						<li :class="store.currentRoom === 'hong'?'list-group-item active':'list-group-item' " 
+							@click="store.changeRoom(u)" style="cursor: pointer;" v-for="(u, i) in store.users" :key="i">{{u}}</li>
+										
+						<li :class="store.currentRoom === 'hong'?'list-group-item active':'list-group-item' " 
+							@click="store.changeRoom('public')" style="cursor: pointer;" v-for="(u, i) in store.users" :key="i">전체채팅</li>
+										
+					</ul>
+				</div>
+			</div>
+			<div class="col-sm-9">
+				<div class="panel panel-primary">
+					<div class="panel-heading text-center">
+						<b>{{store.changeRoom === 'public'?'전체':'1:1채팅 - ' + store.currentRoom}}</b>
+					</div>
+					<div class="panel-body chat-body">
+						<div v-for="(m,i) in store.messages">
+							<div :class="{'my-msg' :m.sender===store.loginUser}">
+								<b>{{m.sender}}</b>:{{m.message}}
+							</div>
+						</div>
+					</div>
+					<div class="panel-footer">
+						<div class="input-group">
+							<input type="text" class="form-control" v-model="store.msg"
+							@keyup.enter="store.send()" placeholder="메시지 입력">
+							<span class="input-group-btn">
+								<button class="btn btn-primary" @click="store.send()">전송</button>
+							</span>
+						</div>
+					</div>
+				</div>
+			</div>
 		</div>
 	</div>
 	<script src="/js/chatStore.js"></script>
 	<script>
-		const {createApp, onMounted,ref} = Vue
+		const {createApp, onMounted, ref} = Vue
 		const {createPinia} = Pinia
-
+		
 		const chatApp = createApp({
 			setup(){
 				const store = useChatStore()
 				
-				/* const userId = ref('')
-				const receiver = ref('')
-				const msg = ref('') */
-				
-				/* const connect=()=>{
-					store.connect(store.userId)
-				}
-				
-				const send=()=>{
-					store.sendPrivateMessage(store.receiver,store.msg)
-					store.msg = ''
-					
-				} */
+				onMounted(()=>{
+					store.loginUser = LOGIN_USER
+					store.connect()
+				})
 				
 				return{
-					store/* 
-					userId,
-					receiver,
-					msg */
-					
-
+					store
 				}
 			}
-			
 		})
 		chatApp.use(createPinia())
-		chatApp.mount("#chat")
+		chatApp.mount("#app")
 	</script>
 </body>
 </html>

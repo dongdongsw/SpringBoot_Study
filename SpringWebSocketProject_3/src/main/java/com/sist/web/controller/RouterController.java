@@ -53,10 +53,4 @@ public class RouterController {
 		return "redirect:/login";
 	}
 	
-	@GetMapping("/chat")
-	public String chat_page() {
-		
-		return "chat";
-	}
-	
 }

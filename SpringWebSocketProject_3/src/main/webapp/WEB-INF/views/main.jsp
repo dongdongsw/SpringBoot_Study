@@ -27,14 +27,12 @@
 			<h3>메인 페이지</h3>
 			<table class="table">
 				<tbody>
-					<sec:authorize access="isAnonymous()">
+					<sec:authorize access="!isAuthenticated()">
 						<tr>
 							<td class="text-center">
 								<a href="/login" class="btn btn-sm btn-success">로그인</a>
 							</td>
 						</tr>
-					</sec:authorize>
-					<sec:authorize access="!isAuthenticated()">
 					<tr>
 						<td class="text-center">
 							<a href="/join" class="btn btn-sm btn-danger">회원가입</a>
@@ -54,16 +52,10 @@
 					<sec:authorize access="isAuthenticated()">
 						<tr>
 							<td class="text-center">
-								<a href="#" class="btn btn-sm btn-primary">일반 채팅</a>
+								<a href="/chat" class="btn btn-sm btn-primary">채팅</a>
 							</td>
 						</tr>
-						<sec:authorize access="hasRole('USER')">
-						<tr>
-							<td class="text-center">
-								<a href="#" class="btn btn-sm btn-info">1:1채팅</a>
-							</td>
-						</tr>
-						</sec:authorize>
+						
 						<tr>
 							<td class="text-center">
 								<a href="/logout" class="btn btn-sm btn-warning">로그아웃</a>

@@ -1,4 +1,4 @@
-package com.sist.web.config;
+package com.sist.web.security;
 
 import java.io.IOException;
 
