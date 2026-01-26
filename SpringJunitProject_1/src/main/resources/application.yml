@@ -1,0 +1,42 @@
+# port => default 8080 => 보안 설정(AWS) : port 허용
+# 8080 / 1521 / 3306 (MySQL, MariaDB)
+# MVC 설정
+server:
+  port: 8080
+  servlet:
+    context-path: /
+
+
+spring:
+  mvc:
+    view:
+      prefix: /WEB-INF/views/
+      suffix: .jsp
+  datasource:
+    url: jdbc:mysql://localhost:3306/mydb?serverTimezone=UTC
+    username: root
+    password: 1234
+    driver-class-name: com.mysql.cj.jdbc.Driver
+#  ai:
+#    google:
+#      genai:
+#        api-key: 
+
+  servlet:
+    multipart:
+      enabled: true   
+      max-file-size: 100MB
+      max-request-size: 100MB
+
+mybatis:
+  type-aliases-package: com.sist.web.vo
+  mapper-locations: mybatis/mapper/*.xml
+
+kma:
+  service-key: "cersZ70uxWU0ccYpSBAAT5gRkiOl1q3Pqr2GbOvzC0zzyQD073VSzVr0mYlqVldzVqlnc0pW2%2FK%2Fu7dU1s6AfA%3D%3D"
+  
+# MyBatis : 복잡한 SQL => Annotation / XML(JOIN/동적 쿼리)
+# 프록시저 / 트리거 / 함수
+# JPA => JOIN => CRUD
+# WebSocket 설정 / Kafka 설정 / MSA 설정
+# Security : 람다식
