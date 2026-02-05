@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 
 import com.sist.web.entity.FoodEntity;
 import com.sist.web.repository.FoodRepository;
-import com.sist.web.vo.FoodListVO;
+import com.sist.web.vo.FoodDTO;
 
 import lombok.RequiredArgsConstructor;
 
@@ -17,7 +17,7 @@ public class FoodServiceImpl implements FoodService{
 	private final FoodRepository foodRepo;
 
 	@Override
-	public List<FoodListVO> foodListData(int start) {
+	public List<FoodDTO> foodListData(int start) {
 		// TODO Auto-generated method stub
 		return foodRepo.foodListData(start);
 	}
@@ -25,8 +25,7 @@ public class FoodServiceImpl implements FoodService{
 	@Override
 	public int foodTotalPage() {
 		// TODO Auto-generated method stub
-		
-		 return (int)(Math.ceil(foodRepo.count() / 12.0));
+		return (int)(Math.ceil(foodRepo.count()/12.0));
 	}
 
 	@Override
@@ -34,5 +33,6 @@ public class FoodServiceImpl implements FoodService{
 		// TODO Auto-generated method stub
 		return foodRepo.findByFno(fno);
 	}
+	
 	
 }

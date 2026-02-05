@@ -17,34 +17,33 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.sist.web.entity.FoodEntity;
 import com.sist.web.entity.RecipeDetailEntity;
 import com.sist.web.entity.RecipeEntity;
 import com.sist.web.service.RecipeService;
-import com.sist.web.vo.RecipeListVO;
+import com.sist.web.vo.FoodDTO;
 
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequiredArgsConstructor
 @CrossOrigin(origins = "*")
+@RequiredArgsConstructor
 public class RecipeRestController {
 
 	private final RecipeService rService;
 	
 	@GetMapping("/recipe/list_react/{page}")
-	public ResponseEntity<Map> recipe_list_react(@PathVariable("page") int page){
+	public ResponseEntity<Map> reciep_list_react(@PathVariable("page") int page){
 		Map map = new HashMap<>();
+		
 		try {
 			final int ROWSIZE = 12;
-			Pageable pg = PageRequest.of(page-1, ROWSIZE,Sort.by(Sort.Direction.ASC,"no"));
-			/*
-			 * SELECT * FROM recipe2
-			 * ORDER BY no ASC
-			 * OFFSET page-1 ROWS FETCH NEXT 12 ROWS ONLY
-			 */
+			// SELECT * FROM recipe
+			// ORDER BY no ASC
+			// OFFSET page - 1 ROWS FETCH NEXT ROWSIZE ROWS ONLY
+			Pageable pg = PageRequest.of(page-1, ROWSIZE, Sort.by(Sort.Direction.ASC,"no"));
 			Page<RecipeEntity> pList = rService.findAll(pg);
 			List<RecipeEntity> list = new ArrayList<RecipeEntity>();
+			
 			if(pList != null && pList.hasContent()) {
 				list = pList.getContent();
 			}
@@ -58,35 +57,14 @@ public class RecipeRestController {
 				endPage = totalpage;
 			}
 			
+			
 			map.put("list", list);
-			map.put("startPage", startPage);
-			map.put("endPage", endPage);
 			map.put("totalpage", totalpage);
 			map.put("curpage", page);
+			map.put("startPage", startPage);
+			map.put("endPage", endPage);
 			
-		} catch (Exception ex) {
-			ex.printStackTrace();
-			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-		}
-		return new ResponseEntity<>(map, HttpStatus.OK);
-	}
-	
-	@GetMapping("/recipe/detail_react/{no}")
-	public ResponseEntity<Map> recipe_detail_react(@PathVariable("no") int no){
-		Map map = new HashMap<>();
-		try {
-			RecipeDetailEntity vo = rService.findByNo(no);
-			String[] datas = vo.getFoodmake().split("\n");
-			List<String> cList = new ArrayList<String>();
-			List<String> iList = new ArrayList<String>();
-			for(String data:datas) {
-				 StringTokenizer st = new StringTokenizer(data,"^");
-				 cList.add(st.nextToken());
-				 iList.add(st.nextToken());
-			}
-			map.put("vo", vo);
-			map.put("cList", cList);
-			map.put("iList", iList);
+			
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -95,4 +73,32 @@ public class RecipeRestController {
 		return new ResponseEntity<>(map, HttpStatus.OK);
 	}
 	
+	@GetMapping("/recipe/detail_react/{no}")
+	public ResponseEntity<Map> recipe_detail_react(@PathVariable("no") int no){
+
+		Map map = new HashMap<>();
+		try{
+			RecipeDetailEntity vo = rService.findByNo(no);
+			String[] datas = vo.getFoodmake().split("\n");
+			List<String> tList = new ArrayList<String>();
+			List<String> iList = new ArrayList<String>();
+					
+			for(String data : datas) {
+				StringTokenizer st = new StringTokenizer(data,"^");
+				tList.add(st.nextToken());
+				iList.add(st.nextToken());
+			}
+			
+			map.put("vo", vo);
+			map.put("tList", tList);
+			map.put("iList", iList);
+			
+					
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		
+		return new ResponseEntity<>(map, HttpStatus.OK);
+	}
 }

@@ -12,8 +12,45 @@ import com.sist.web.vo.*;
 @Repository
 public interface FoodRepository extends JpaRepository<FoodEntity, Integer>{
 	
-   @Query(value="SELECT fno,name,poster FROM menupan_food ORDER BY fno ASC OFFSET :start ROWS FETCH NEXT 12 ROWS ONLY",nativeQuery=true)
+   @Query(value="SELECT fno,name,poster "
+   		+ "FROM menupan_food "
+   		+ "ORDER BY fno ASC "
+   		+ "OFFSET :start ROWS FETCH NEXT 12 ROWS ONLY",nativeQuery=true)
    List<FoodListVO> foodListData(@Param("start")int start);
    // findAll()
    // count()
+   
+   public FoodEntity findByFno(int fno);
+   
+   // SELECT * FROM menupan_food WHERE fno = 10
+   // WHERE ORDER BY
+   // COUNT() save() delete()
+   /*
+    * [리턴형] findBy[조건][연산자][정렬]
+    * findBy컬럼명(값) ===> WHERE 컬럼명 = 값
+    * findByAddressContaining ==> address LIKE '%값%'
+    * 
+    * = Is, Equals
+    * != Not
+    * > GraterThan ===> findByHitGraterThan(int hit)
+    * < LessThan
+    * BETWEEN Between 	===> findByFnoBetween(int a, int b)
+    * IN In				===> findByAddressIn(List<String> addr)
+    * LIKE Like
+    * 	=> %% Containing(변수)
+    * 	=> A% StartsWith
+    * 	=> %A EndsWith
+    * findByCommIsNull()
+    * findByCommIsNotNull()
+    * 
+    * findByNameAndAddress()
+    * 
+    * findByFnoOrderByAsc()
+    * 
+    * 중복 없는 데이터
+    * findDistinctByAddress
+    *     --------  -------
+    *     			  | WHERE
+    *       | SELECT
+    */
 }

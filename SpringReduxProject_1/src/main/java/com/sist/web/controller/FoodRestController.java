@@ -13,13 +13,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.sist.web.entity.FoodEntity;
 import com.sist.web.service.FoodService;
-import com.sist.web.vo.FoodListVO;
+import com.sist.web.vo.FoodDTO;
 
 import lombok.RequiredArgsConstructor;
 
-@RestController
+@RestController // 자동으로 JSON 변경 => Jackson 라이브러리로 인해서 자동 변경
 @RequiredArgsConstructor
-@CrossOrigin(origins="*")
+@CrossOrigin(origins = "*")
 public class FoodRestController {
 
 	private final FoodService fService;
@@ -28,9 +28,10 @@ public class FoodRestController {
 	public ResponseEntity<Map> food_list(@PathVariable("page") int page){
 		
 		Map map = new HashMap<>();
+		
 		try {
 			
-			List<FoodListVO> list = fService.foodListData((page-1)*12);
+			List<FoodDTO> list = fService.foodListData((page-1)*12);
 			int totalpage = fService.foodTotalPage();
 			
 			final int BLOCK = 10;
@@ -40,18 +41,20 @@ public class FoodRestController {
 				endPage = totalpage;
 			}
 			
+			
 			map.put("list", list);
-			map.put("startPage", startPage);
-			map.put("endPage", endPage);
 			map.put("totalpage", totalpage);
 			map.put("curpage", page);
+			map.put("startPage", startPage);
+			map.put("endPage", endPage);
+			
 			
 		} catch (Exception ex) {
 			ex.printStackTrace();
-			return new ResponseEntity<Map>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		
-		return new ResponseEntity<Map>(map, HttpStatus.OK);
+		return new ResponseEntity<>(map, HttpStatus.OK);
 	}
 	
 	@GetMapping("/food/detail_react/{fno}")
