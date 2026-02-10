@@ -11,10 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.sist.web.dto.CommonsDTO;
-import com.sist.web.dto.MemberDTO;
-import com.sist.web.entity.MemberEntity;
-import com.sist.web.service.MemberService;
+import com.sist.web.dto.AttractionDTO;
 import com.sist.web.service.TravelService;
 
 import lombok.RequiredArgsConstructor;
@@ -22,26 +19,31 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @CrossOrigin(origins = "*")
 @RequiredArgsConstructor
-public class MainController {
-
-	private final TravelService tService;
-	private final MemberService mService;
+public class JejuRestController {
 	
-	@GetMapping("/")
-	public ResponseEntity<Map> main_page(){
+	private final TravelService tService;
+	
+	@GetMapping("/jeju/attraction/{page}")
+	public ResponseEntity<Map> jeju_attraction(@PathVariable("page") int page){
+		
 		Map map = new HashMap<>();
 		
 		try {
-			CommonsDTO mainData = tService.seoulMainData();
-			List<CommonsDTO> seoulData = tService.seoulListData4();
-			List<CommonsDTO> busanData = tService.busanListData4();
-			List<CommonsDTO> jejuData = tService.jejuListData5();
-			 
-			map.put("main", mainData);
-			map.put("sList", seoulData);
-			map.put("bList", busanData);
-			map.put("jList", jejuData);
+			List<AttractionDTO> list = tService.jejuAttractionData((page-1)*12);
+			int totalpage = tService.jejuTotalPage(12);
 			
+			final int BLOCK = 10;
+			int startPage = ((page-1)/BLOCK*BLOCK) + 1;
+			int endPage = ((page-1)/BLOCK*BLOCK) + BLOCK;
+			
+			if(endPage > totalpage) {
+				endPage = totalpage;
+			}
+			map.put("list", list);
+			map.put("totalpage", totalpage);
+			map.put("startPage",startPage );
+			map.put("endPage", endPage);
+			map.put("curpage", page);
 			
 			
 		} catch (Exception ex) {
@@ -51,21 +53,22 @@ public class MainController {
 		return new ResponseEntity<>(map, HttpStatus.OK);
 	}
 	
-	@GetMapping("/member/login/{id}/{pwd}")
-	public ResponseEntity<MemberDTO> member_login(@PathVariable("id") String id, @PathVariable("pwd") String pwd){
-		
-		MemberDTO dto = new MemberDTO();
-		
+	@GetMapping("/jeju/detail_react/{contentid}")
+	public ResponseEntity<Map> jeju_detail(@PathVariable("contentid") int contentid){
+	
+
+		Map map = new HashMap<>();
 		try {
-			dto = mService.memberLogin(id, pwd);
 			
+			AttractionDTO dto = tService.jejuAttractionDetail(contentid);
+			map.put("dto", dto);
+			
+			// 댓글 첨부
 			
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
-		return new ResponseEntity<>(dto, HttpStatus.OK);
-		
+		return new ResponseEntity<>(map, HttpStatus.OK);
 	}
-	
 }

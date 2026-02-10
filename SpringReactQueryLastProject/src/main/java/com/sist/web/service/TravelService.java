@@ -2,6 +2,9 @@ package com.sist.web.service;
 
 import java.util.List;
 
+import org.springframework.data.repository.query.Param;
+
+import com.sist.web.dto.AttractionDTO;
 import com.sist.web.dto.CommonsDTO;
 
 public interface TravelService {
@@ -15,4 +18,7 @@ public interface TravelService {
 	
 	// 제주
 	public List<CommonsDTO> jejuListData5();
+	public List<AttractionDTO> jejuAttractionData(int start);
+	public int jejuTotalPage(int contenttype);
+	public AttractionDTO jejuAttractionDetail(int contentid);
 }
