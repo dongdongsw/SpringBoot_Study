@@ -60,9 +60,6 @@ public class RecipeRestController {
 			map.put("endPage", endPage);
 			map.put("curpage", page);
 			
-			
-			
-			
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);

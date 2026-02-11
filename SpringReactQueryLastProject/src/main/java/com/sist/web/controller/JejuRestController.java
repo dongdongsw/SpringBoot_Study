@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.sist.web.dto.AttractionDTO;
+import com.sist.web.dto.CommentDTO;
+import com.sist.web.service.CommentService;
 import com.sist.web.service.TravelService;
 
 import lombok.RequiredArgsConstructor;
@@ -22,6 +24,7 @@ import lombok.RequiredArgsConstructor;
 public class JejuRestController {
 	
 	private final TravelService tService;
+	private final CommentService cService;
 	
 	@GetMapping("/jeju/attraction/{page}")
 	public ResponseEntity<Map> jeju_attraction(@PathVariable("page") int page){
@@ -61,8 +64,9 @@ public class JejuRestController {
 		try {
 			
 			AttractionDTO dto = tService.jejuAttractionDetail(contentid);
+			List<CommentDTO> list = cService.commentListData(contentid);
 			map.put("dto", dto);
-			
+			map.put("comments", list);
 			// 댓글 첨부
 			
 		} catch (Exception ex) {
