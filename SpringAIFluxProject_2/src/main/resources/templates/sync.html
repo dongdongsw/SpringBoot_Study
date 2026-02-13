@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link rel="stylesheet" href="/chat.css">
+</head>
+<body>
+  <div class="container">
+    <div class="header">Spring AI Chat (Sync)</div>
+    <div class="chat-box" id="chatBox">
+      <div class="message assistant">
+        <div class="message-content">
+          무엇을 도와드릴까요?
+        </div>
+      </div>
+      
+    </div>
+    <div class="input-area">
+        <div class="input-group">
+         <input type=text id="messageInput" placehoder="메세지 입력">
+         <button id="sendButton">전송</button>
+        </div>
+      </div>
+  </div>
+  <script>
+    // 채팅메세지가 표시 => div 
+    const chatBox=document.getElementById('chatBox')
+    // 사용자 입력창 
+    const messageinput=document.getElementById('messageInput')
+    // 메세지 전송
+    const sendButton =document.getElementById('sendButton')
+    
+    // 제미나이에서 전송된 데이터 
+    let currentAssistantMessage = null
+    
+    // 사용자 메세지를 화면에 추가 
+    function addUserMessage(message)
+    {
+    	const messageDiv= document.createElement('div')
+    	messageDiv.className='message user'
+    	messageDiv.innerHTML='<div class="message-content">'+escapeHtml(message)+'</div>'
+    	// div태그 추가 
+    	chatBox.appendChild(messageDiv)
+    	// 스크롤을 아래로 이동 
+    	chatBox.scrollTop=chatBox.scrollHeight
+    }
+    // AI메세지 영역을 미리 생성 
+    // 보안 처리 
+    function escapeHtml(text)
+    {
+    	const div=document.createElement('div')
+    	div.textContent=text // text() 
+    	// 문자열 변환 
+    	return div.innerHTML // html()
+    }
+    function createAssistantMessage()
+    {
+    	const messageDiv=document.createElement('div')
+    	messageDiv.className='message assistant'
+    	
+    	const contentDiv=document.createElement('div')
+    	contentDiv.className='message-content'
+    	
+        messageDiv.appendChild(contentDiv)
+        chatBox.appendChild(messageDiv)
+        
+        return contentDiv
+    	
+    }
+    // 메세지 전송 
+    async function sendMessage(){
+    	const message=messageInput.value.trim()
+    	
+    	if(!message) return 
+    	
+    	addUserMessage(message)
+    	
+    	messageInput.value=""
+    	
+    	sendButton.disabled=true // 중복 
+    	
+    	// AI 
+    	currentAssistantMessage=createAssistantMessage()
+    	
+    	try
+    	{
+    		const response=await fetch('/chat/sync?message='+encodeURIComponent(message))
+    		
+    		if(!response.ok)
+    		{
+    		   throw new Error('HTTP error Status:'+response.status)	
+    		}
+    		const content=await response.text()
+    		currentAssistantMessage.textContent=content
+    	}catch(error){
+    		console.error("Error",error)
+    	}
+    	sendButton.disabled=false
+    	currentAssistantMessage=null
+    }
+    // 이벤트 연동 
+    sendButton.addEventListener('click',sendMessage)
+    // Enter 
+    messageInput.addEventListener('keypress',(e)=>{
+    	if(e.key==='Enter') sendMessage()
+    })
+  </script>
+</body>
+</html>

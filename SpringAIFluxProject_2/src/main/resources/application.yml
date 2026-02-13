@@ -18,10 +18,11 @@ spring:
   prefix: classpath:templates/
   suffix: .html
   mode: HTML
+
  ai:
-  google:
-   genai:
-    api-key: AIzaSyDMz38SPBH_uUin7jyAm_n50yDtLQ0_RaY
+    google:
+      genai:
+       api-key: AIzaSyDMz38SPBH_uUin7jyAm_n50yDtLQ0_RaY
 server:
   servlet:
     encoding:
@@ -34,3 +35,5 @@ logging:
    org.hibernate.SQL: DEBUG
    org.hibernate.orm.jdbc.bind: TRACE  
     
+ # AI 설정
+ 

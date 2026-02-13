@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<div id="content"></div>
+	<script>
+		const eventSource = new EventSource("/stream2")
+		eventSource.onmessage = function(event){
+			document.getElementById("content").innerHTML += "<p>" + event.data + "</p>"
+		}
+	</script>
+	
+</body>
+</html>
